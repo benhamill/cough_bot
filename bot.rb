@@ -23,9 +23,13 @@ bot = Cinch::Bot.new do
     @cough = true
 
     while @cough do
-      message = cough
-      m.reply(message) unless message.empty?
-      sleep(rand(30))
+      (fit = rand(4)).times do
+        message = cough
+        m.reply(message) unless message.empty?
+        m.reply("so sorry.") if fit == 4
+      end
+
+      sleep(rand(1000) + 1000)
     end
   end
 
