@@ -1,5 +1,5 @@
 require 'bundler'
-Bundle.require
+Bundler.require
 
 bot = Cinch::Bot.new do
   configure do |c|
@@ -9,9 +9,8 @@ bot = Cinch::Bot.new do
   end
 
   on :message, /!wut/ do |m|
-    channel = m.channel
-
-    raw('wut')
+    m.reply 'yeeeeeeeaaaaaaaaaaah'
+    # raw('wut')
   end
 end
 
