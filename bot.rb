@@ -13,7 +13,9 @@ bot = Cinch::Bot.new do
 
   helpers do
     def cough
-      ([([@coughs.sample] * rand(5))] * rand(10)).flatten.join(' ')
+      (1..rand(10)).inject('') do |memo, number|
+        memo << ([@coughs.sample] * rand(5)).join(' ') + ' '
+      end.gsub(/^ +/, '').gsub(/ +$/, '').gsub(/  +/, '')
     end
   end
 
@@ -21,7 +23,8 @@ bot = Cinch::Bot.new do
     @cough = true
 
     while @cough do
-      m.reply(cough)
+      message = cough
+      m.reply(message) unless message.empty?
       sleep(rand(30))
     end
   end
