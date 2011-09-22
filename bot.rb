@@ -19,11 +19,12 @@ bot = Cinch::Bot.new do
     end
 
     def have_fit(m)
-      (fit = rand(4)).times do
+      (fit = (rand(4) + 1)).times do
         message = cough
         m.reply(message) unless message.empty?
-        m.reply("so sorry.") if fit == 4
       end
+
+      m.reply("Excuse me.") if fit == 4
     end
   end
 
@@ -53,7 +54,7 @@ bot = Cinch::Bot.new do
   on :message, /!nah/ do |m|
     @cough = false
 
-    m.reply("AHEM-hem. Excue me.")
+    m.reply("AHEM-hem. Excsue me.")
   end
 end
 
