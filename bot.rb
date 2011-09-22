@@ -17,19 +17,36 @@ bot = Cinch::Bot.new do
         memo << ([@coughs.sample] * rand(5)).join(' ') + ' '
       end.gsub(/^ +/, '').gsub(/ +$/, '').gsub(/  +/, '')
     end
-  end
 
-  on :message, /!wut/ do |m|
-    @cough = true
-
-    while @cough do
+    def have_fit(m)
       (fit = rand(4)).times do
         message = cough
         m.reply(message) unless message.empty?
         m.reply("so sorry.") if fit == 4
       end
+    end
+  end
 
-      sleep(rand(1000) + 1000)
+  on :message, /!help/ do |m|
+    m.reply("To give me a command, prefix it with a bang (!). I know these commands:")
+    m.reply("help: Show this message.")
+    m.reply("cough: have a coughing fit on demand.")
+    m.reply("wut: have occasional fits of my own accord.")
+    m.reply("nah: stop having fits on my own.")
+  end
+
+  on :message, /!cough/ do |m|
+    have_fit(m)
+  end
+
+  on :message, /!wut/ do |m|
+    unless @cough
+      @cough = true
+
+      while @cough do
+        have_fit(m)
+        sleep(rand(1000) + 1000)
+      end
     end
   end
 
