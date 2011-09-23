@@ -56,6 +56,30 @@ bot = Cinch::Bot.new do
 
     m.reply("AHEM-hem. Excuse me.")
   end
+
+  on :message, /OTF/ do |m|
+    m.reply "Who the fuck?"
+  end
+
+  on :message, /WTF/ do |m|
+    m.reply "What the fuck?"
+  end
+
+  on :message, /HTF/ do |m|
+    m.reply "How the fuck?"
+  end
+
+  on :message, /YTF/ do |m|
+    m.reply "Why the fuck?"
+  end
+
+  on :message, /RTF/ do |m|
+    m.reply "Where the fuck?"
+  end
+
+  on :message, /NTF/ do |m|
+    m.reply "When the fuck?"
+  end
 end
 
 bot.start
