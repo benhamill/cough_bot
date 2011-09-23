@@ -13,18 +13,33 @@ bot = Cinch::Bot.new do
 
   helpers do
     def cough
-      (1..rand(10)).inject('') do |memo, number|
-        memo << ([@coughs.sample] * rand(5)).join(' ') + ' '
-      end.gsub(/^ +/, '').gsub(/ +$/, '').gsub(/  +/, '')
+      (1..roll(3)).inject('') do |memo, number|
+        memo << ([@coughs.sample] * roll(4)).join(' ') + ' '
+      end.gsub(/^ +/, '').gsub(/ +$/, '').gsub(/  +/, ' ')
     end
 
     def have_fit(m)
-      (fit = (rand(4) + 1)).times do
+      (fit = roll(4)).times do
         message = cough
         m.reply(message) unless message.empty?
       end
 
       m.reply("Excuse me.") if fit == 4
+    end
+
+    def roll(number)
+      rand(number) + 1
+    end
+
+    def q_word_lookup(letter)
+      {
+        'O' => 'Who',
+        'N' => 'When',
+        'W' => 'What',
+        'H' => 'How',
+        'Y' => 'Why',
+        'R' => 'Where',
+      }[letter]
     end
   end
 
@@ -57,28 +72,8 @@ bot = Cinch::Bot.new do
     m.reply("AHEM-hem. Excuse me.")
   end
 
-  on :message, /OTF/ do |m|
-    m.reply "Who the fuck?"
-  end
-
-  on :message, /WTF/ do |m|
-    m.reply "What the fuck?"
-  end
-
-  on :message, /HTF/ do |m|
-    m.reply "How the fuck?"
-  end
-
-  on :message, /YTF/ do |m|
-    m.reply "Why the fuck?"
-  end
-
-  on :message, /RTF/ do |m|
-    m.reply "Where the fuck?"
-  end
-
-  on :message, /NTF/ do |m|
-    m.reply "When the fuck?"
+  on :message, /([OWNRHY])TF/ do |m, letter|
+    m.reply "Hey, YEAH! #{q_word_lookup(letter)} the FUCK?!?!"
   end
 end
 
