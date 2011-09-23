@@ -54,7 +54,7 @@ bot = Cinch::Bot.new do
   on :message, /!nah/ do |m|
     @cough = false
 
-    m.reply("AHEM-hem. Excsue me.")
+    m.reply("AHEM-hem. Excuse me.")
   end
 end
 
