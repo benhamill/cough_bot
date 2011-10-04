@@ -5,9 +5,8 @@ bot = Cinch::Bot.new do
   configure do |c|
     c.server = "irc.freenode.org"
     c.channels = [ENV['CHANNEL']]
-    c.nick = '_T_C_G_'
+    c.nick = 'osmbot'
 
-    @cough = false
     @coughs = %w{COUGH cough AHEM ahem HACK hack harrumph hmm-hmm hmm-HMM HMM-hmm ahem-hem AHEM-hem ahem-HEM AHEM-HEM coughcough COUGHcough coughCOUGH HRRRRRGGGRRRHRHHRHRHRHRGGGXHHG}
   end
 
@@ -18,17 +17,25 @@ bot = Cinch::Bot.new do
       end.gsub(/^ +/, '').gsub(/ +$/, '').gsub(/  +/, ' ')
     end
 
-    def have_fit(m)
+    def cough_on(nick, m)
       (fit = roll(4)).times do
         message = cough
-        m.reply(message) unless message.empty?
+        m.reply("#{nick}: #{message}") unless message.empty?
       end
 
-      m.reply("Excuse me.") if fit == 4
+      m.reply("#{nick}: Excuse me.") if fit == 4
     end
 
     def roll(number)
       rand(number) + 1
+    end
+
+    def commands(command, m)
+      if command =~ /cough on (\w+)/
+        cough_on($1, m)
+      else
+        :noop
+      end
     end
 
     def q_word_lookup(letter)
@@ -43,37 +50,16 @@ bot = Cinch::Bot.new do
     end
   end
 
-  on :message, /!help/ do |m|
-    m.reply("To give me a command, prefix it with a bang (!). I know these commands:")
-    m.reply("help: Show this message.")
-    m.reply("cough: have a coughing fit on demand.")
-    m.reply("wut: have occasional fits of my own accord.")
-    m.reply("nah: stop having fits on my own.")
-  end
-
-  on :message, /!cough/ do |m|
-    have_fit(m)
-  end
-
-  on :message, /!wut/ do |m|
-    unless @cough
-      @cough = true
-
-      while @cough do
-        have_fit(m)
-        sleep(rand(1000) + 1000)
-      end
-    end
-  end
-
-  on :message, /!nah/ do |m|
-    @cough = false
-
-    m.reply("AHEM-hem. Excuse me.")
+  on :message, /^#{self.nick}\:? +(.*)/ do |m, command|
+    commands(command, m)
   end
 
   on :message, /([OWNRHY])TF/ do |m, letter|
     m.reply "Hey, YEAH! #{q_word_lookup(letter)} the FUCK?!?!"
+  end
+
+  on :message, /maron/i do |m|
+    m.reply "Seriously."
   end
 end
 
